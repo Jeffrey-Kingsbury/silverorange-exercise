@@ -1,12 +1,23 @@
 import { Router, Request, Response } from 'express';
-
+import axios from 'axios';
+import * as localReposData from '../../data/repos.json';
+import reposDataCombiner from './reposDataCombiner';
 export const repos = Router();
 
 repos.get('/', async (_: Request, res: Response) => {
-  res.header('Cache-Control', 'no-store');
+  res.header({
+    'Cache-Control': 'no-store',
+    "Content-Type": "application/json"
+  });
 
-  res.status(200);
+  try {
+    await axios
+      .get('https://api.github.com/users/silverorange/repos')
+      .then(({ data }) => {
+        res.status(200).json(reposDataCombiner(localReposData, data));
+      })
 
-  // TODO: See README.md Task (A). Return repo data here. You’ve got this!
-  res.json([]);
+  } catch (err) {
+    res.status(500).send(err)
+  }
 });
