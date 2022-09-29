@@ -6,8 +6,8 @@ export const repos = Router();
 
 repos.get('/', async (_: Request, res: Response) => {
   res.header({
-    'Cache-Control': 'no-store',
-    "Content-Type": "application/json"
+    'cache-control': 'no-store',
+    'content-type': 'application/json',
   });
 
   try {
@@ -15,9 +15,8 @@ repos.get('/', async (_: Request, res: Response) => {
       .get('https://api.github.com/users/silverorange/repos')
       .then(({ data }) => {
         res.status(200).json(reposDataCombiner(localReposData, data));
-      })
-
+      });
   } catch (err) {
-    res.status(500).send(err)
+    res.status(500).send(err);
   }
 });
